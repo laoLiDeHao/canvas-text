@@ -32,22 +32,40 @@ function render() {
       this.distance = 0
       this.friction = Math.random() * 0.6 + 0.15
       this.ease = Math.random() * 0.1 + 0.005;
+      this.linkmouse = Math.random()
     }
     draw() {
+      if (this.effect.mouse.active&&this.linkmouse<0.2) {
+        let gradient1 = this.effect.context.createLinearGradient(0, 0, this.effect.canvasWidth, this.effect.canvasHeight);
+        gradient1.addColorStop(0.3, 'red')
+        gradient1.addColorStop(0.5, 'fuchsia')
+        gradient1.addColorStop(0.7, 'purple')
+
+        this.effect.context.strokeStyle = gradient1;
+        this.effect.context.lineWidth = 0.1
+        this.effect.context.beginPath();
+        this.effect.context.moveTo(this.x, this.y);
+        this.effect.context.lineTo(this.effect.mouse.x, this.effect.mouse.y);
+        this.effect.context.stroke();
+      }
       this.effect.context.fillStyle = this.color
       this.effect.context.fillRect(this.x, this.y, this.size, this.size)
     }
     update() {
-      // mouse hover
-      this.dx = this.effect.mouse.x - this.x
-      this.dy = this.effect.mouse.y - this.y
-      this.distance = Math.pow(Math.hypot(this.dx, this.dy), 2) // \sqrt{v_1^2 + v_2^2 + \dots + v_n^2}
-      this.force = -this.effect.mouse.radius / this.distance
-      if (this.distance < this.effect.mouse.radius) {
-        this.angle = Math.atan2(this.dy, this.dx)
-        this.vx += this.force * Math.cos(this.angle)
-        this.vy += this.force * Math.sin(this.angle)
+      if (this.effect.mouse.active) {
+        // mouse hover
+        this.dx = this.effect.mouse.x - this.x
+        this.dy = this.effect.mouse.y - this.y
+        this.distance = Math.pow(Math.hypot(this.dx, this.dy), 2) // \sqrt{v_1^2 + v_2^2 + \dots + v_n^2}
+        this.force = -this.effect.mouse.radius / this.distance
+        if (this.distance < this.effect.mouse.radius) {
+          this.angle = Math.atan2(this.dy, this.dx)
+          this.vx += this.force * Math.cos(this.angle)
+          this.vy += this.force * Math.sin(this.angle)
+        }
+
       }
+
       // let paritcles from any  position to right position
       // and this.xy is random inited
       this.x += (this.vx *= this.friction) + (this.originX - this.x) * this.ease;
@@ -76,8 +94,9 @@ function render() {
 
       // particle text
       this.particles = []
-      this.gap = 3
+      this.gap = 2
       this.mouse = {
+        active: false,
         radius: 20000,
         x: 0,
         y: 0
@@ -88,8 +107,12 @@ function render() {
         this.mouse.x = e.x
         this.mouse.y = e.y
       })
-
-
+      window.addEventListener('mouseover', () => {
+        this.mouse.active = true
+      })
+      window.addEventListener('mouseout', () => {
+        this.mouse.active = false
+      })
     }
     draw() {
 
