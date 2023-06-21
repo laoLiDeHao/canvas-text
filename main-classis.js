@@ -22,7 +22,7 @@ function render() {
       this.color = color
       this.originX = x
       this.originY = y
-      this.size = 4;
+      this.size = this.effect.gap;
       this.dx = 0
       this.dy = 0
       this.vx = 0
@@ -35,40 +35,18 @@ function render() {
       this.linkmouse = Math.random()
     }
     draw() {
-      if (this.effect.mouse.active && this.linkmouse < 0.2) {
+      if (this.effect.mouse.active&&this.linkmouse<0.2) {
         let gradient1 = this.effect.context.createLinearGradient(0, 0, this.effect.canvasWidth, this.effect.canvasHeight);
         gradient1.addColorStop(0.3, 'red')
         gradient1.addColorStop(0.5, 'fuchsia')
         gradient1.addColorStop(0.7, 'purple')
 
         this.effect.context.strokeStyle = gradient1;
-        this.effect.context.lineWidth = 0.01
+        this.effect.context.lineWidth = 0.1
         this.effect.context.beginPath();
         this.effect.context.moveTo(this.x, this.y);
         this.effect.context.lineTo(this.effect.mouse.x, this.effect.mouse.y);
         this.effect.context.stroke();
-      }
-      let particles = this.effect.particles
-      for (let i = 0; i < particles.length; i++) {
-        let partParticle = particles[i]
-        if(partParticle.x==this.x&&partParticle.y==this.y)
-        continue
-        let ddx = Math.abs(partParticle.x - this.x)
-        let ddy = Math.abs(partParticle.y - this.y)
-
-        if (ddx < 15 && ddy < 15) {
-          let gradient1 = this.effect.context.createLinearGradient(0, 0, this.effect.canvasWidth, this.effect.canvasHeight);
-          gradient1.addColorStop(0.3, 'red')
-          gradient1.addColorStop(0.5, 'fuchsia')
-          gradient1.addColorStop(0.7, 'purple')
-
-          this.effect.context.strokeStyle = gradient1;
-          this.effect.context.lineWidth =1
-          this.effect.context.beginPath();
-          this.effect.context.moveTo(this.x, this.y);
-          this.effect.context.lineTo(partParticle.x, partParticle.y);
-          this.effect.context.stroke();
-        }
       }
       this.effect.context.fillStyle = this.color
       this.effect.context.fillRect(this.x, this.y, this.size, this.size)
@@ -105,7 +83,6 @@ function render() {
       this.textX = this.canvasWidth / 2
       this.textY = this.canvasHeight / 2
       this.fontSize = 100
-      
       this.lineHeight = this.fontSize
       this.maxTextWidth = this.canvasWidth * .8
       this.textInput = document.getElementById('textInput')
@@ -117,7 +94,7 @@ function render() {
 
       // particle text
       this.particles = []
-      this.gap = 10
+      this.gap = 2
       this.mouse = {
         active: false,
         radius: 20000,
@@ -154,7 +131,7 @@ function render() {
 
       this.context.lineWidth = 3 //rgba(s0,s1,s2,s3)
       this.context.strokeStyle = 'white'
-      this.context.font = `bold ${this.fontSize}px Helvetica`
+      this.context.font = `${this.fontSize}px Helvetica`
 
 
 
